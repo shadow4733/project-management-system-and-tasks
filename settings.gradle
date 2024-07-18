@@ -1,0 +1,8 @@
+rootProject.name = 'project-management-system-and-tasks'
+include(
+        'user-service',
+        'task-management-service',
+        'project-management-service',
+        'notification-service',
+        'analytics-and-reporting-service'
+)
