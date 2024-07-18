@@ -1,4 +1,4 @@
-rootProject.name = 'project-management-system-and-tasks'
+rootProject.name = 'management-system-and-tasks'
 include(
         'user-service',
         'task-management-service',
