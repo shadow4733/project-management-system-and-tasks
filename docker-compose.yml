@@ -1,3 +1,55 @@
-#version: '3'
-#services:
-#  user-service:
+version: '3'
+services:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - db_user_service
+    ports:
+      - "8080:8080"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db_user_service:5432/user_service
+      KAFKA_URL: kafka:9092
+
+  project_management_service:
+    build:
+      context: ./project-management-service
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka
+      - db_project_management_service
+    ports:
+      - "8081:8081"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db_project_management_service:5432/project_management_service
+      KAFKA_URL: kafka:9092
+
+  db_user_service:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: user_service
+
+  db_project_management_service:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: project_management_service
+
+  zookeeper:
+    image: 'confluentinc/cp-zookeeper:latest'
+    environment:
+        ZOOKEEPER_CLIENT_PORT: 2181
+
+  kafka:
+    image: 'confluentinc/cp-kafka:latest'
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
