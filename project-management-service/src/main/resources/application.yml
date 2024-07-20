@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: project-management-service
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/project-management-service}
+    username: postgres
+    password: 123
+  jpa:
+    hibernate:
+      ddl-auto: update
+  kafka:
+    bootstrap-servers: ${KAFKA_URL:localhost:9092}
+    consumer:
+      group-id: project-management-service
+      auto-offset-reset: earliest
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      spring.json.trusted.packages: '*'
+      properties:
+        spring.json.trusted.packages: com.event_module.model
+    producer:
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+server:
+  port: 8081
