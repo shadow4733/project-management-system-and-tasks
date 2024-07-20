@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-
     @Bean
     public GroupedOpenApi customOpenApi(){
         return GroupedOpenApi.builder()
@@ -14,5 +13,4 @@ public class SwaggerConfig {
                 .packagesToScan("com.project.user_service.controller")
                 .build();
     }
-
 }

@@ -6,3 +6,5 @@ include(
         'notification-service',
         'analytics-and-reporting-service'
 )
+include 'event-module'
+
