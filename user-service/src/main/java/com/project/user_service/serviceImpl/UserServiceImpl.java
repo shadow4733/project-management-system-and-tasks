@@ -1,5 +1,6 @@
 package com.project.user_service.serviceImpl;
 
+import com.event_module.model.UserVerifiedEvent;
 import com.project.user_service.dto.request.AuthenticationRequest;
 import com.project.user_service.dto.request.UpdatePasswordRequest;
 import com.project.user_service.dto.request.UserRequest;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordValidator passwordValidator;
     private final PasswordEncoder passwordEncoder;
     private final EmailServiceImpl emailService;
+    private final KafkaProducerService kafkaProducerService;
 
     Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
@@ -68,6 +70,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmailToken(token);
         user.setEmailVerified(true);
         user.setEmailToken(null);
+
+        UserVerifiedEvent event = new UserVerifiedEvent();
+        event.setUserId(user.getUserId());
+        event.setUsername(user.getUsername());
+        kafkaProducerService.sendMessage("user-verified-topic", event);
+
         userRepository.save(user);
         logger.info("User email confirmed");
     }
