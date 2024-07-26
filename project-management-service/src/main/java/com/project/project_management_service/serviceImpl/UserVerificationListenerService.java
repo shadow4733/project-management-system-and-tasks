@@ -18,7 +18,7 @@ public class UserVerificationListenerService {
         VerifiedUser verifiedUser = new VerifiedUser();
         verifiedUser.setUserId(userVerifiedEvent.getUserId());
         verifiedUser.setUsername(userVerifiedEvent.getUsername());
-
+        verifiedUser.setProfession(null);
         verifiedUserRepository.save(verifiedUser);
     }
 

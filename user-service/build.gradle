@@ -60,7 +60,7 @@ dependencies {
 	implementation project(":event-module")
 }
 
-//kakfa
+//kafka
 dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 }

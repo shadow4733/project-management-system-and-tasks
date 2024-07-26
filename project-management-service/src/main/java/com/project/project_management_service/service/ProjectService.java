@@ -7,5 +7,5 @@ import com.project.project_management_service.dto.response.CreateProjectResponse
 
 public interface ProjectService {
     CreateProjectResponse createProject(CreateProjectRequest request);
-    AddAUserToTheProjectResponse addAUserToProject(AddAUserToTheProjectRequest request);
+    AddAUserToTheProjectResponse addUserToProject(AddAUserToTheProjectRequest request);
 }
