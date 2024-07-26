@@ -4,8 +4,10 @@ import com.project.project_management_service.model.enums.Profession;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,12 +20,18 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID projectId;
-    private UUID creatorProjectId;
+    @ManyToOne
+    private VerifiedUser creator;
     private String projectName;
     private String projectDescription;
-    private String projectManagers;
-    private String projectMembers;
+    @ManyToMany
+    private Set<VerifiedUser> projectMembers;
     @ElementCollection(targetClass = Profession.class)
     @Enumerated(EnumType.STRING)
     private Set<Profession> requiredProfessions;
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectId, creator, projectName, projectDescription);
+    }
 }
