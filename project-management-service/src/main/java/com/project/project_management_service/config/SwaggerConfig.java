@@ -9,7 +9,7 @@ public class SwaggerConfig {
     @Bean
     public GroupedOpenApi customOpenApi(){
         return GroupedOpenApi.builder()
-                .group("user-service")
+                .group("project-management-service")
                 .packagesToScan("com.project.project_management_service.controller")
                 .build();
     }
