@@ -1,4 +1,11 @@
 package com.project.project_management_service.dto.request;
 
-public record UpdateProjectRequest() {
+import java.util.UUID;
+
+public record UpdateProjectRequest(
+        UUID projectId,
+        String projectName,
+        String projectDescription
+
+) {
 }

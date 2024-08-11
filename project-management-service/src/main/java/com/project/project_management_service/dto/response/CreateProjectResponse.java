@@ -9,7 +9,6 @@ public record CreateProjectResponse(
         UUID projectId,
         UUID creatorId,
         String projectName,
-        String projectDescription,
-        String status
+        String projectDescription
 ) {
 }

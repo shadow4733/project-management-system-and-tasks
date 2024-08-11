@@ -1,4 +1,8 @@
 package com.project.project_management_service.dto.response;
 
-public record UpdateProjectResponse() {
+import com.project.project_management_service.model.Project;
+
+public record UpdateProjectResponse(
+        Project updatedProject
+) {
 }

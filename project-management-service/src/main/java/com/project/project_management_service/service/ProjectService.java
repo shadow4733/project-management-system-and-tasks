@@ -6,7 +6,7 @@ import com.project.project_management_service.dto.response.*;
 public interface ProjectService {
     CreateProjectResponse createProject(CreateProjectRequest request);
     UpdateProjectResponse updateProject(UpdateProjectRequest request);
-    GetProjectInfoByIdResponse getProjectById(GetProjectInfoByIdRequest request);
+    GetProjectInfoByIdResponse getProjectInfoById(GetProjectInfoByIdRequest request);
     AddUserToTheProjectResponse addUserToProject(AddUserToTheProjectRequest request);
     DeleteUserFromProjectResponse deleteUserFromProject(DeleteUserFromProjectRequest request);
     GetAllUsersByCertainProfessionResponse getAllUsersByCertainProfessionOnTheProject(GetAllUsersByCertainProfessionRequest request);

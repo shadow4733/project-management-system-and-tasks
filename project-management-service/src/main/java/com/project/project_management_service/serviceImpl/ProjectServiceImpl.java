@@ -70,8 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
                 savedProject.getProjectId(),
                 savedProject.getCreator().getUserId(),
                 savedProject.getProjectName(),
-                savedProject.getProjectDescription(),
-                "success"
+                savedProject.getProjectDescription()
         );
     }
 
@@ -81,7 +80,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public GetProjectInfoByIdResponse getProjectById(GetProjectInfoByIdRequest request) {
+    public GetProjectInfoByIdResponse getProjectInfoById(GetProjectInfoByIdRequest request) {
         return null;
     }
 
@@ -114,8 +113,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         return new AddUserToTheProjectResponse(
                 user.getUsername(),
-                project.getProjectName(),
-                "success"
+                project.getProjectName()
         );
     }
 
@@ -136,7 +134,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         logger.info("User " + user.getUsername() + " removed from project " + project.getProjectName());
 
-        return new DeleteUserFromProjectResponse("Success");
+        return new DeleteUserFromProjectResponse();
     }
 
     @Override
