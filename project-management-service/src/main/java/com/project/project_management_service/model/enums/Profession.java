@@ -1,6 +1,7 @@
 package com.project.project_management_service.model.enums;
 
 public enum Profession {
+    CREATOR_OF_THE_PROJECT,
     ENGINEER,
     BACKEND_DEVELOPER,
     FRONTEND_DEVELOPER,
