@@ -1,34 +1,48 @@
 package com.project.project_management_service.controller;
 
-import com.project.project_management_service.dto.request.AddAUserToTheProjectRequest;
-import com.project.project_management_service.dto.request.CreateProjectRequest;
-import com.project.project_management_service.dto.response.AddAUserToTheProjectResponse;
-import com.project.project_management_service.dto.response.CreateProjectResponse;
+import com.project.project_management_service.dto.request.*;
+import com.project.project_management_service.dto.response.*;
+import com.project.project_management_service.model.enums.Profession;
 import com.project.project_management_service.service.ProjectService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v2/projects")
-@RequiredArgsConstructor
 public class ProjectController {
 
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    @PostMapping
-    public ResponseEntity<CreateProjectResponse> createProject(@RequestBody CreateProjectRequest request) {
-        CreateProjectResponse response = projectService.createProject(request);
-        return ResponseEntity.ok(response);
+    @PostMapping("/createProject")
+    public CreateProjectResponse createProject(@RequestBody CreateProjectRequest request) {
+        return projectService.createProject(request);
     }
 
-    @PostMapping("/{projectId}/users")
-    public ResponseEntity<AddAUserToTheProjectResponse> addAUserToProject(@RequestBody AddAUserToTheProjectRequest request) {
-        AddAUserToTheProjectResponse response = projectService.addUserToProject(request);
-        return ResponseEntity.ok(response);
+    @PostMapping("/addUserToProject/{projectId}/users")
+    public AddUserToTheProjectResponse addUserToProject(@RequestBody AddUserToTheProjectRequest request) {
+        return projectService.addUserToProject(request);
     }
 
+    @DeleteMapping("/deleteUserFromProject/{projectId}/users/{userId}")
+    public DeleteUserFromProjectResponse deleteUserFromProject(@PathVariable UUID projectId, @PathVariable UUID userId) {
+        return projectService.deleteUserFromProject(new DeleteUserFromProjectRequest(projectId, userId));
+    }
+
+    @GetMapping("/getAllUsersByCertainProfession/users/profession")
+    public GetAllUsersByCertainProfessionResponse getAllUsersByCertainProfession(@RequestParam Profession profession) {
+        return projectService.getAllUsersByCertainProfessionOnTheProject(new GetAllUsersByCertainProfessionRequest(profession));
+    }
+
+    @GetMapping("/getAllUsersOnTheProject/{projectId}/users")
+    public GetAllUsersOnTheProjectResponse getAllUsersOnTheProject(@PathVariable UUID projectId) {
+        return projectService.getAllUsersOnTheProject(new GetAllUsersOnTheProjectRequest(projectId));
+    }
+
+    @GetMapping("/getUserCreator/{projectId}/creator")
+    public GetUserCreatorResponse getUserCreator(@PathVariable UUID projectId) {
+        return projectService.getUserCreator(new GetUserCreatorRequest(projectId));
+    }
 }
