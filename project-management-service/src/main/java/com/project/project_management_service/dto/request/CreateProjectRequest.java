@@ -4,6 +4,7 @@ import java.util.UUID;
 
 public record CreateProjectRequest(
         UUID creatorId,
+        String creatorUsername,
         String projectName,
         String projectDescription
 ) {

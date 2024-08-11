@@ -1,4 +1,9 @@
 package com.project.project_management_service.dto.request;
 
-public record DeleteUserFromProjectRequest() {
+import java.util.UUID;
+
+public record DeleteUserFromProjectRequest(
+        UUID projectId,
+        UUID userId
+) {
 }

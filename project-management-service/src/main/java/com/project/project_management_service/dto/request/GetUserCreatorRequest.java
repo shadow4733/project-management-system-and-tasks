@@ -1,4 +1,8 @@
 package com.project.project_management_service.dto.request;
 
-public record GetUserCreatorRequest() {
+import java.util.UUID;
+
+public record GetUserCreatorRequest(
+        UUID projectId
+) {
 }

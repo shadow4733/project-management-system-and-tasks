@@ -1,4 +1,8 @@
 package com.project.project_management_service.dto.request;
 
-public record GetAllUsersByCertainProfessionRequest() {
+import com.project.project_management_service.model.enums.Profession;
+
+public record GetAllUsersByCertainProfessionRequest(
+        Profession profession
+) {
 }
