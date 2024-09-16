@@ -8,6 +8,7 @@ public interface ProjectService {
     UpdateProjectResponse updateProject(UpdateProjectRequest request);
     GetProjectInfoByIdResponse getProjectInfoById(GetProjectInfoByIdRequest request);
     AddUserToTheProjectResponse addUserToProject(AddUserToTheProjectRequest request);
+    AddTaskToTheProjectResponse addTaskToProject(AddTaskToTheProjectRequest request);
     DeleteUserFromProjectResponse deleteUserFromProject(DeleteUserFromProjectRequest request);
     GetAllUsersByCertainProfessionResponse getAllUsersByCertainProfessionOnTheProject(GetAllUsersByCertainProfessionRequest request);
     GetAllUsersOnTheProjectResponse getAllUsersOnTheProject(GetAllUsersOnTheProjectRequest request);

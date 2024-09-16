@@ -34,4 +34,14 @@ public class VerifiedUser {
     public int hashCode() {
         return Objects.hash(userId, username, profession);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        VerifiedUser that = (VerifiedUser) o;
+        return Objects.equals(userId, that.userId) &&
+                Objects.equals(username, that.username) &&
+                profession == that.profession;
+    }
 }

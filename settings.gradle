@@ -1,8 +1,8 @@
 rootProject.name = 'management-system-and-tasks'
 include(
         'user-service',
-        'task-management-service',
         'project-management-service',
+        'task-management-service',
         'notification-service',
         'analytics-and-reporting-service'
 )

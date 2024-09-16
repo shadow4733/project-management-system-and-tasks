@@ -5,26 +5,39 @@ services:
       context: ./user-service
       dockerfile: Dockerfile
     depends_on:
-      - kafka
+      - kafka1
       - db_user_service
     ports:
       - "8080:8080"
     environment:
       DATABASE_URL: jdbc:postgresql://db_user_service:5432/user_service
-      KAFKA_URL: kafka:9092
+      KAFKA_URL: kafka1:9092
 
   project_management_service:
     build:
       context: ./project-management-service
       dockerfile: Dockerfile
     depends_on:
-      - kafka
+      - kafka1
       - db_project_management_service
     ports:
       - "8081:8081"
     environment:
       DATABASE_URL: jdbc:postgresql://db_project_management_service:5432/project_management_service
-      KAFKA_URL: kafka:9092
+      KAFKA_URL: kafka1:9092
+
+  task_management_service:
+    build:
+      context: ./task-management-service
+      dockerfile: Dockerfile
+    depends_on:
+      - kafka2
+      - db_task_management_service
+    ports:
+      - "8082:8082"
+    environment:
+      DATABASE_URL: jdbc:postgresql://db_task_management_service:5432/task_management_service
+      KAFKA_URL: kafka2:9092
 
   db_user_service:
     image: postgres:latest
@@ -40,16 +53,35 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: project_management_service
 
-  zookeeper:
-    image: 'confluentinc/cp-zookeeper:latest'
+  db_task_management_service:
+    image: postgres:latest
     environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: task_management_service
 
-  kafka:
-    image: 'confluentinc/cp-kafka:latest'
-    depends_on:
-      - zookeeper
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka1:
+    image: wurstmeister/kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
     environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  kafka2:
+    image: wurstmeister/kafka
+    ports:
+      - "9093:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_BROKER_ID: 2
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1

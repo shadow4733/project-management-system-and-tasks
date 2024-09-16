@@ -1,5 +1,6 @@
 package com.project.project_management_service.serviceImpl;
 
+import com.event_module.model.TaskDetailsEvent;
 import com.project.project_management_service.dto.additional.GetAllUserDto;
 import com.project.project_management_service.dto.additional.GetAllUsersByCertainProfessionDto;
 import com.project.project_management_service.dto.additional.GetUserCreatorDto;
@@ -11,10 +12,12 @@ import com.project.project_management_service.exception.UserAlreadyMemberProject
 import com.project.project_management_service.exception.UserNotFoundException;
 import com.project.project_management_service.model.Project;
 import com.project.project_management_service.model.ProjectMember;
+import com.project.project_management_service.model.Task;
 import com.project.project_management_service.model.VerifiedUser;
 import com.project.project_management_service.model.enums.Profession;
 import com.project.project_management_service.repository.ProjectMemberRepository;
 import com.project.project_management_service.repository.ProjectRepository;
+import com.project.project_management_service.repository.TaskRepository;
 import com.project.project_management_service.repository.VerifiedUserRepository;
 import com.project.project_management_service.service.ProjectService;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +33,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final VerifiedUserRepository verifiedUserRepository;
     private final ProjectMemberRepository projectMemberRepository;
+    private final TaskRepository taskRepository;
+    private final KafkaProducerService kafkaProducerService;
 
     Logger logger = Logger.getLogger(ProjectServiceImpl.class.getName());
 
@@ -76,12 +81,36 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public UpdateProjectResponse updateProject(UpdateProjectRequest request) {
-        return null;
+        Project project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new ProjectNotFoundException());
+
+        if (project.getProjectName().equals(request.projectName()) &&
+            project.getProjectDescription().equals(request.projectDescription())) {
+            throw new IllegalArgumentException("New name and description must be different from the current ones.");
+        }
+            project.setProjectName(request.projectName());
+            project.setProjectDescription(request.projectDescription());
+
+            Project updatedProject = projectRepository.save(project);
+
+            return new UpdateProjectResponse(
+                    updatedProject.getProjectId(),
+                    updatedProject.getProjectName(),
+                    updatedProject.getProjectDescription()
+            );
     }
 
     @Override
     public GetProjectInfoByIdResponse getProjectInfoById(GetProjectInfoByIdRequest request) {
-        return null;
+        Project project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new ProjectNotFoundException());
+
+        return new GetProjectInfoByIdResponse(
+                project.getProjectId(),
+                project.getCreatorUsername(),
+                project.getProjectName(),
+                project.getProjectDescription()
+        );
     }
 
     @Override
@@ -114,6 +143,55 @@ public class ProjectServiceImpl implements ProjectService {
         return new AddUserToTheProjectResponse(
                 user.getUsername(),
                 project.getProjectName()
+        );
+    }
+
+    @Override
+    public AddTaskToTheProjectResponse addTaskToProject(AddTaskToTheProjectRequest request) {
+        Project project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new ProjectNotFoundException());
+
+        Task task = new Task();
+        task.setTaskName(request.taskName());
+        task.setTaskDescription(request.taskDescription());
+        task.setTaskStatus(request.taskStatus());
+        task.setTaskPriority(request.taskPriority());
+        task.setProjectId(request.projectId());
+        task.setProjectName(project.getProjectName());
+        task.setUserId(request.userId());
+        task.setUsername(request.username());
+        task.setProfession(request.profession());
+
+        taskRepository.save(task);
+
+        TaskDetailsEvent event = new TaskDetailsEvent(
+                task.getTaskId(),
+                task.getTaskName(),
+                task.getTaskDescription(),
+                task.getTaskStatus(),
+                task.getTaskPriority(),
+                task.getProjectId(),
+                task.getProjectName(),
+                task.getUserId(),
+                task.getUsername(),
+                task.getProfession()
+        );
+
+        kafkaProducerService.sendProjectDetails("task-details-topic", event);
+
+        logger.info("Task " + task.getTaskName() + " added to project " + project.getProjectName());
+
+        return new AddTaskToTheProjectResponse(
+                task.getTaskId(),
+                task.getTaskName(),
+                task.getTaskDescription(),
+                task.getTaskStatus(),
+                task.getTaskPriority(),
+                task.getProjectId(),
+                task.getProjectName(),
+                task.getUserId(),
+                task.getUsername(),
+                task.getProfession()
         );
     }
 

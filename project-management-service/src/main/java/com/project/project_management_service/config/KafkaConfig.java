@@ -1,12 +1,14 @@
-package com.project.user_service.config;
+package com.project.project_management_service.config;
 
-import com.event_module.model.UserVerifiedEvent;
+import com.event_module.model.TaskDetailsEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.*;
+import org.springframework.kafka.core.DefaultKafkaProducerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.HashMap;
@@ -19,7 +21,7 @@ public class KafkaConfig {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, UserVerifiedEvent> producerFactory() {
+    public ProducerFactory<String, TaskDetailsEvent> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -28,7 +30,7 @@ public class KafkaConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, UserVerifiedEvent> kafkaTemplate() {
+    public KafkaTemplate<String, TaskDetailsEvent> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
 }

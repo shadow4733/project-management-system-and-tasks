@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.1'
 	id 'io.spring.dependency-management' version '1.1.5'
+	id 'org.jetbrains.kotlin.jvm' version '1.9.24' apply false
 }
 
 group = 'com.project'
@@ -17,6 +18,18 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+}
+
+subprojects {
+	apply plugin: 'org.jetbrains.kotlin.jvm'
+
+	bootJar {
+		enabled = true
+	}
+}
+
+bootJar {
+	enabled = false
 }
 
 repositories {
